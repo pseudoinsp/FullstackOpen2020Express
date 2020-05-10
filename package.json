@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/pseudoinsp/FullstackOpen2020Express#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
