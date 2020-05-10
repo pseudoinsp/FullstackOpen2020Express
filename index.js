@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
     {
         "name": "Arto Hellas",
@@ -34,6 +36,10 @@ const ComposeServerInfo = () => {
             ${new Date()}`
 }
 
+const randomInteger = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
@@ -57,13 +63,34 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
+app.post('/api/persons', (request, response) => {
+    const person = request.body
+    console.log(person)
+
+    if(!person.name || !person.number) {
+        return response.status(400).json({
+            error: "name or id is missing"
+        })            
+    }
+
+    if(persons.map(p => p.name).includes(person.name)) {  
+        return response.status(400).json({
+            error: "name has already been added"
+        })    
+    }
+
+    person.id = randomInteger(0, 2048394853495)
+  
+    persons = persons.concat(person)
+    response.status(201).end()
+  })
+
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(p => p.id !== id)
 
     res.status(204).end()
 })
-
 
 const PORT = 3001
 app.listen(PORT, () => {
