@@ -60,7 +60,6 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  // res.json(persons)
   Person.find({}).then(persons => {
     res.json(persons)
   })
@@ -78,25 +77,31 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const person = {...request.body}
-    console.log(person)
+    const personDTO = {...request.body}
+    console.log(personDTO)
 
-    if(!person.name || !person.number) {
+    if(!personDTO.name || !personDTO.number) {
         return response.status(400).json({
             error: "name or id is missing"
         })            
     }
 
-    if(persons.map(p => p.name).includes(person.name)) {  
-        return response.status(400).json({
-            error: "name has already been added"
-        })    
-    }
+    // if(persons.map(p => p.name).includes(person.name)) {  
+    //     return response.status(400).json({
+    //         error: "name has already been added"
+    //     })    
+    // }
 
-    person.id = randomInteger(0, 2048394853495)
-  
-    persons = persons.concat(person)
-    response.status(201).end()
+    const person = new Person({
+      id: randomInteger(1, 2048394853495),
+      name: personDTO.name,
+      number: personDTO.number
+    })
+
+    person.save().then(savedNote => {
+        console.log(`added ${savedNote.name} number ${savedNote.number} to phonebook`)
+        response.json(savedNote)
+    })
   })
 
 app.delete('/api/persons/:id', (req, res) => {
