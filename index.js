@@ -38,6 +38,8 @@ let persons = [
       }
 ]
 
+app.use(express.static('build'))
+
 const ComposeServerInfo = () => {
     return `Phonebook has info for ${persons.length} people <br/> <br/> 
             ${new Date()}`
