@@ -12,34 +12,6 @@ morgan.token('requestbody', (req, res) => {
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :requestbody'))
 
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-      },
-      {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        "id": 2
-      },
-      {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 3
-      },
-      {
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122",
-        "id": 4
-      },
-      {
-        "name": "asd",
-        "number": "45345",
-        "id": 5
-      }
-]
-
 app.use(express.static('build'))
 
 const ComposeServerInfo = () => {
@@ -90,7 +62,7 @@ app.put('/api/persons/:id', (req, res, next) => {
 
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const personDTO = {...req.body}
     console.log(personDTO)
 
@@ -113,9 +85,9 @@ app.post('/api/persons', (req, res) => {
     })
 
     person.save().then(savedNote => {
-        console.log(`added ${savedNote.name} number ${savedNote.number} to phonebook`)
-        res.json(savedNote)
-    })
+                    console.log(`added ${savedNote.name} number ${savedNote.number} to phonebook`)
+                    res.json(savedNote)})
+                  .catch(error => next(error))
   })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -138,6 +110,8 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message })
   } 
 
   next(error)
