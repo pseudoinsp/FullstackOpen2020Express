@@ -7,14 +7,14 @@ if(process.argv.length !== 5 && process.argv.length !== 3)
 }
 
 const randomInteger = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
 
 const password = process.argv[2]
 const url =
   `mongodb+srv://fullstack:${password}@cluster0-zrc6g.mongodb.net/test?retryWrites=true&w=majority`
 
-  mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const personSchema= new mongoose.Schema({
     id: Number,
@@ -45,7 +45,7 @@ else
         number: newPersonPhone
     })
 
-    person.save().then(result => {
+    person.save().then(() => {
         console.log(`added ${newPersonName} number ${newPersonPhone} to phonebook`)
         mongoose.connection.close()
     })
